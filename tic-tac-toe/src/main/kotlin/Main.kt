@@ -2,7 +2,7 @@ fun main() {
     val game = Game()
     game.init()
 
-    while (true) {
+    while (!game.b_hasGameEnded) {
         game.draw()
         game.update()
     }

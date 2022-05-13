@@ -3,7 +3,7 @@
 *  - [x] player types
 *  - [x] create player
 *  - [x] "your input letter - X / O"
-*  - [ ] player moves
+*  - [x] player moves
 *  - [x] conditions of winning
 *  - [ ] player vs player
 *  - [ ] random player
@@ -16,8 +16,8 @@ class Game {
     val board = Board()
     val player1 = createPlayer(typeOfPlayer())
     val player2 = createPlayer(typeOfPlayer())
-    var isFirstPlayerTurn:Boolean = true
-    var isGame: Boolean = true
+    var b_isFirstPlayerTurn:Boolean = true
+    var b_hasGameEnded: Boolean = false
 
     // ------ INITIALIZE GAME ------
     fun init() {
@@ -29,23 +29,22 @@ class Game {
 
     // ------ UPDATE GAME ------
     fun update() {
-        if (isFirstPlayerTurn) {
-            player1.move(board.table as MutableList<String>)
-            isGame = checkWin()
-            isFirstPlayerTurn = false
-
+        if (b_isFirstPlayerTurn) {
+            player1.move(board.table as MutableList<String>, b_hasGameEnded)
+            b_hasGameEnded = checkWin()
+            b_isFirstPlayerTurn = false
         } else {
-            player2.move(board.table as MutableList<String>)
-            isGame = checkWin()
-            isFirstPlayerTurn = true
-
+            player2.move(board.table as MutableList<String>, b_hasGameEnded)
+            b_hasGameEnded = checkWin()
+            b_isFirstPlayerTurn = true
         }
-
     }
 
     // ------ DRAW GAME ------
     fun draw() {
-        board.draw()
+        if (!b_hasGameEnded) {
+            board.draw()
+        }
     }
 
     // ------ OTHER ------
@@ -129,45 +128,64 @@ class Game {
 
         // HORIZONTAL WINNING
         if (board.table[0] == board.table[1] && board.table[1] == board.table[2]) {
-            println("--------WIN---------")
-            return false
+            whichPlayerWon()
+            return true
         }
         if (board.table[3] == board.table[4] && board.table[4] == board.table[5]) {
-            println("--------WIN---------")
-            return false
+            whichPlayerWon()
+            return true
         }
         if (board.table[6] == board.table[7] && board.table[7] == board.table[8]) {
-            println("--------WIN---------")
-            return false
+            whichPlayerWon()
+            return true
         }
 
         // VERTICAL WINNING
         if (board.table[0] == board.table[3] && board.table[3] == board.table[6]) {
-            println("--------WIN---------")
-            return false
+            whichPlayerWon()
+            return true
         }
         if (board.table[1] == board.table[4] && board.table[4] == board.table[7]) {
-            println("--------WIN---------")
-            return false
+            whichPlayerWon()
+            return true
         }
         if (board.table[2] == board.table[5] && board.table[5] == board.table[8]) {
-            println("--------WIN---------")
-            return false
+            whichPlayerWon()
+            return true
         }
 
         // DIAGONAL WINNING
         if (board.table[0] == board.table[4] && board.table[4] == board.table[8]) {
-            println("--------WIN---------")
-            return false
+            whichPlayerWon()
+            return true
         }
         if (board.table[2] == board.table[4] && board.table[4] == board.table[6]) {
-            println("--------WIN---------")
-            return false
+            whichPlayerWon()
+            return true
         }
 
         // NONE
         else {
-            return true
+            return false
+        }
+    }
+
+    /**
+     * printing which player won
+     */
+    private fun whichPlayerWon() {
+        if (b_isFirstPlayerTurn) {
+            println()
+            println("------------------")
+            println("FIRST PLAYER (${player1.type()}) WON")
+            println("------------------")
+            println()
+        } else {
+            println()
+            println("------------------")
+            println("SECOND PLAYER (${player2.type()}) WON")
+            println("------------------")
+            println()
         }
     }
 }
